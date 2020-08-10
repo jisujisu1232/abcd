@@ -59,7 +59,9 @@ localstack_demo | UnicodeDecodeError: 'utf-8' codec can't decode byte 0xbf in po
 ```
 ##### 3.1.2.2 aws kinesis put-record
 ```
-aws kinesis put-record --stream-name stream --data '127.0.0.1 - - [10/Aug/2020:15:18:51 +0900] "GET / HTTP/1.1" 200 612 "-" "curl/7.58.0"' --endpoint http://localhost:4568 --partition-key "test"
+aws kinesis put-record  --endpoint http://localhost:4568 \
+> --stream-name stream --data '127.0.0.1 - - [10/Aug/2020:15:18:51 +0900] "GET / HTTP/1.1" 200 612 "-" "curl/7.58.0"' \
+> --partition-key "test"
 {
     "ShardId": "shardId-000000000000",
     "SequenceNumber": "49609702820516273427131379532118303336149003465230647298"
@@ -79,7 +81,8 @@ localstack_demo | 2020-08-10T19:38:09:INFO:root: Upload finished successfully
 - CloudWatch Log
   - Log Group 확인
 ```
-root@DESKTOP-4EUCKGD:/home/jisu# aws --endpoint-url=http://localhost:4586 logs describe-log-groups
+root@DESKTOP-4EUCKGD:/home/jisu# aws logs --endpoint-url=http://localhost:4586 \
+> describe-log-groups
 {
     "logGroups": [
         {
@@ -95,7 +98,9 @@ root@DESKTOP-4EUCKGD:/home/jisu# aws --endpoint-url=http://localhost:4586 logs d
 ```
   - Log Stream 확인
 ```
-root@DESKTOP-4EUCKGD:/home/jisu# aws --endpoint-url=http://localhost:4586 logs describe-log-streams --log-group-name /aws/lambda/parsing_lambda
+root@DESKTOP-4EUCKGD:/home/jisu# aws logs --endpoint-url=http://localhost:4586 \
+> describe-log-streams \
+> --log-group-name /aws/lambda/parsing_lambda
 {
     "logStreams": [
         {
@@ -137,7 +142,9 @@ root@DESKTOP-4EUCKGD:/home/jisu# aws --endpoint-url=http://localhost:4586 logs g
     "nextForwardToken": "f/00000000000000000000000000000000000000000000000000000000",
     "nextBackwardToken": "b/00000000000000000000000000000000000000000000000000000000"
 }
-root@DESKTOP-4EUCKGD:/home/jisu# aws --endpoint-url=http://localhost:4586 logs get-log-events --log-group-name /aws/lambda/parsing_lambda --log-stream-name 2020/08/10/[LATEST]25e1e2b0
+root@DESKTOP-4EUCKGD:/home/jisu# aws --endpoint-url=http://localhost:4586 logs \
+> get-log-events --log-group-name /aws/lambda/parsing_lambda \
+> --log-stream-name 2020/08/10/[LATEST]25e1e2b0
 {
     "events": [
         {
