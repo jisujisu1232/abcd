@@ -8,7 +8,6 @@
 cd {Project Path}
 docker-compose up
 ```
-data {Project Path}/.localstack/
 ### 2.2 Terraform
 ```
 terraform init
