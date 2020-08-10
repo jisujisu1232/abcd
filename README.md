@@ -18,8 +18,8 @@ terraform apply
 ## 3. 개념 검증
 ### 3.1 EC2(Nginx) - Kinesis
 #### 3.1.1 Localstack EC2
-- Mac OS VirtualBox 만 지원하는 것을 확인
-https://github.com/localstack/localstack-pro-samples/tree/master/ec2-custom-ami
+[Mac OS VirtualBox 만 지원하는 것을 확인](https://github.com/localstack/localstack-pro-samples/tree/master/ec2-custom-ami)
+
 #### 3.1.2 Windows Ubuntu 사용
 ##### 3.1.2.1 aws-kinesis-agent
 - /etc/aws-kinesis/agent.json
