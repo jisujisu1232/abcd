@@ -8,6 +8,7 @@
 cd {Project Path}
 docker-compose up
 ```
+data {Project Path}/.localstack/
 ### 2.2 Terraform
 ```
 terraform init
@@ -38,7 +39,7 @@ terraform apply
   ]
 }
 ```
-- localstack 에러 발생
+- localstack 에러 발생   원인 파악 하지 못함.
 ```
 localstack_demo | 2020-08-10T18:06:13:WARNING:localstack.utils.server.http2_server: Error in proxy handler for request POST http://localhost:4568/: 'utf-8' codec can't decode byte 0xbf in position 0: invalid start byte Traceback (most recent call last):
 localstack_demo |   File "/opt/code/localstack/localstack/utils/server/http2_server.py", line 86, in index
@@ -69,7 +70,7 @@ Command 정상 완료 확인
 
 ### 3.2 Kinesis - Lambda
 - localstack Log
-Lambda 에서 구성된 Log 호출 확인
+  - Lambda 에서 구성된 Log 호출 확인
 ```
 localstack_demo | 2020-08-10T19:38:09:INFO:root: Processed 1 records from Kinesis
 localstack_demo | 2020-08-10T19:38:09:INFO:root: Starting upload to S3: s3://nginx-access-log-store-dev/nignx_access/2020/08/10/2020-08-10-17:14:56-.gz
@@ -152,12 +153,63 @@ root@DESKTOP-4EUCKGD:/home/jisu# aws --endpoint-url=http://localhost:4586 logs g
 ```
 
 ### 3.3 Lambda - S3
-- Bucket 확인
+- Lambda
+  - Lambda Log parsing
+```
+import re
+
+parts = [
+    r'(?P<host>\S+)',                   # $remote_addr
+    r'\S+',                             # indent %l (unused)
+    r'(?P<user>\S+)',                   # $remote_user
+    r'\[(?P<time>.+)\]',                # [$time_local]
+    r'"(?P<request>.*)"',               # "$request"
+    r'(?P<status>[0-9]+)',              # $status
+    r'(?P<size>\S+)',                   # $body_bytes_sent
+    r'"(?P<referrer>.*)"',              # "$http_referer"
+    r'"(?P<agent>.*)"',                 # "$http_user_agent"
+	r'"(?P<client_ip>\S+)"',            # "$http_x_forwarded_for"
+]
+
+pattern = re.compile(r'\s+'.join(parts)+r'\s*\Z')
+```
+    - JSON Mapping
+      - remote_addr           :   host
+      - remote_user           :   user
+      - time_local            :   time
+      - request               :   request
+      - status                :   status
+      - body_bytes_sent       :   size
+      - http_referer          :   referrer
+      - http_user_agent       :   agent
+      - http_x_forwarded_for  :   client_ip
+  - S3 Key Prefix
+    - {Custom Prefix}/YYYY/MM/DD/{filename}.gz
+```
+PATH_PREFIX = os.environ['LOG_S3_PREFIX']
+
+def upload_by_type(log_list: list):
+    if len(log_list) < 1:
+        return
+
+    # slashes in S3 object keys are like "directory" separators, like in ordinary filesystem paths
+    key = PATH_PREFIX + '/'
+    key += log_timestamp.strftime("%Y/%m/%d/%Y-%m-%d-%H:%M:%S-%f") + ".gz"
+
+    logging.info(f"Starting upload to S3: s3://{BUCKET_NAME}/{key}")
+
+    data = '\n'.join(log_list)
+    put_to_s3(key, BUCKET_NAME, data)
+
+    logger.info(f"Upload finished successfully")
+```
+- S3
+  - Bucket 확인
 ```
 root@DESKTOP-4EUCKGD:/home/jisu# aws s3 --endpoint-url http://localhost:4572 ls
 2020-08-10 17:14:46 nginx-access-log-store-dev
 ```
-- Object 확인
+  - Object 확인
 ```
 root@DESKTOP-4EUCKGD:/home/jisu# aws s3api get-object --endpoint-url http://localhost:4572 \
 > --bucket nginx-access-log-store-dev \
