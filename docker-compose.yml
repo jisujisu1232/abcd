@@ -1,0 +1,19 @@
+version: '2.1'
+
+services:
+  localstack:
+    container_name: localstack_demo
+    image: localstack/localstack:latest
+    ports:
+      - "4566-4599:4566-4599"
+      - "8055:8080"
+    environment:
+      - SERVICES=${SERVICES- }
+        #- DEFAULT_REGION=ap-northeast-2
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR- }
+      - KINESIS_ERROR_PROBABILITY=${KINESIS_ERROR_PROBABILITY- }
+    volumes:
+      - "./.localstack:/tmp/localstack"
+      #- "/var/run/docker.sock:/var/run/docker.sock"
