@@ -37,7 +37,7 @@ resource "aws_lambda_function" "parsing_lambda" {
     variables = {
       TZ                      = "Asia/Seoul"
       LOG_S3_BUCKET           = aws_s3_bucket.logs.id
-      LOG_S3_PREFIX           = "nginx_access"
+      LOG_S3_PREFIX           = var.s3_log_prefix
       TEST_S3_ENDPOINT        = var.lambda_localstack_s3_endpoint
     }
   }

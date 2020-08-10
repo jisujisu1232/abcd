@@ -12,3 +12,8 @@ output "nginx_private_ip" {
   description = "NGINX EC2 Private IP"
   value       = "${aws_instance.nginx.private_ip}"
 }
+
+output "lambda_arn" {
+  description = "Lambda ARN"
+  value       = "${aws_lambda_function.parsing_lambda.arn}"
+}

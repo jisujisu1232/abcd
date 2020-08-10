@@ -102,3 +102,8 @@ output "nginx_private_ip" {
   description = "NGINX EC2 Private IP"
   value       = "${module.log_set.nginx_private_ip}"
 }
+
+output "lambda_arn" {
+  description = "Lambda ARN"
+  value       = "${module.log_set.lambda_arn}"
+}
