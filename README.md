@@ -62,11 +62,11 @@ localstack_demo | UnicodeDecodeError: 'utf-8' codec can't decode byte 0xbf in po
 ```
 git clone https://github.com/awslabs/amazon-kinesis-agent
 sed -e '18 i\export AWS_CBOR_DISABLE=1' amazon-kinesis-agent/bin/aws-kinesis-agent.Ubuntu
-```
-  - Install
-```
+
 cd amazon-kinesis-agent
+
 sudo ./setup --install
+
 sudo service aws-kinesis-agent start
 ```
 ##### 3.1.2.2 aws kinesis put-record
