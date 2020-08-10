@@ -155,15 +155,15 @@ root@DESKTOP-4EUCKGD:/home/jisu# aws --endpoint-url=http://localhost:4586 logs g
 ### 3.3 Lambda - S3
 - Lambda
   - JSON Mapping
-    - remote_addr           :   host
-    - remote_user           :   user
-    - time_local            :   time
-    - request               :   request
-    - status                :   status
-    - body_bytes_sent       :   size
-    - http_referer          :   referrer
-    - http_user_agent       :   agent
-    - http_x_forwarded_for  :   client_ip
+    - `host` : remote_addr
+    - `user` : remote_user
+    - `time` : time_local
+    - `request` : request
+    - `status` : status
+    - `size` : body_bytes_sent
+    - `referrer` : http_referer
+    - `agent` : http_user_agent
+    - `client_ip` : http_x_forwarded_for
   - Lambda Log parsing
 ```
 import re
