@@ -8,6 +8,8 @@ import os
 import urllib.parse
 import uuid
 import re
+import random
+import string
 
 import boto3
 import dateutil.parser
@@ -137,10 +139,10 @@ def decode_validate(raw_records: list):
 def upload_by_type(log_list: list):
     if len(log_list) < 1:
         return
-
+    random_text = ''.join(random.choice(string.ascii_lowercase) for i in range(10))
     # slashes in S3 object keys are like "directory" separators, like in ordinary filesystem paths
     key = PATH_PREFIX + '/'
-    key += log_timestamp.strftime("%Y/%m/%d/%Y-%m-%d-%H:%M:%S-%f") + ".gz"
+    key += log_timestamp.strftime("%Y/%m/%d/%Y-%m-%d-%H:%M:%S-%f")+ random_text + ".gz"
 
     logging.info(f"Starting upload to S3: s3://{BUCKET_NAME}/{key}")
 
