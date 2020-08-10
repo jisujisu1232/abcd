@@ -38,7 +38,7 @@ terraform apply
   ]
 }
 ```
-- localstack 에러 발생   원인 파악 하지 못함.
+- localstack 에러 발생
 ```
 localstack_demo | 2020-08-10T18:06:13:WARNING:localstack.utils.server.http2_server: Error in proxy handler for request POST http://localhost:4568/: 'utf-8' codec can't decode byte 0xbf in position 0: invalid start byte Traceback (most recent call last):
 localstack_demo |   File "/opt/code/localstack/localstack/utils/server/http2_server.py", line 86, in index
@@ -56,6 +56,18 @@ localstack_demo |     data = json.loads(to_str(data or '{}'))
 localstack_demo |   File "/opt/code/localstack/localstack/utils/common.py", line 766, in to_str
 localstack_demo |     return obj.decode(encoding, errors) if isinstance(obj, six.binary_type) else obj
 localstack_demo | UnicodeDecodeError: 'utf-8' codec can't decode byte 0xbf in position 0: invalid start byte
+```
+- 방안
+  - export AWS_CBOR_DISABLE=1 추가
+```
+git clone https://github.com/awslabs/amazon-kinesis-agent
+sed -e '18 i\export AWS_CBOR_DISABLE=1' amazon-kinesis-agent/bin/aws-kinesis-agent.Ubuntu
+```
+  - Install
+```
+cd amazon-kinesis-agent
+sudo ./setup --install
+sudo service aws-kinesis-agent start
 ```
 ##### 3.1.2.2 aws kinesis put-record
 ```
